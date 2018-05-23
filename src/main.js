@@ -49,7 +49,7 @@ class RedditSearchForm extends React.Component {
       .then((response) => {
         console.log(response.body);
         this.setState({
-          redditSelected: response.body,
+          redditForumResult: response.body,
           redditForumError: null,
         });
       })
@@ -110,7 +110,7 @@ class App extends React.Component {
   }
   render() {
     return (
-      <RedditSearchForm/>
+      <RedditSearchForm />
     );
   }
 }
