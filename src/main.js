@@ -3,29 +3,8 @@ import { render as reactDomRender } from 'react-dom';
 import superagent from 'superagent';
 import './styles/main.scss';
 
-const apiUrl = 'http://reddit.com/r/';
+const apiUrl = 'http://www.reddit.com/r/'; // ??? 
 
-// App Component
-// should contain all of the application state
-// should contain methods for modifying the application state
-// the state should have a topics array for holding the results of the search
-
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      redditLookup: {},
-    };
-  }
-  render() {
-    return (
-      <RedditSearchForm/>
-    );
-  }
-}
-
-
-// SearchForm Component
 // onSubmit the form should make a request to reddit
 // it should make a get request to http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}
 // on success it should pass the results to the application state
@@ -35,8 +14,8 @@ class RedditSearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      redditForum: '',
-      redditForumLimit: null,
+      redditForum: 'travel',
+      redditForumLimit: '1',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleForumChange = this.handleForumChange.bind(this);
@@ -57,7 +36,24 @@ class RedditSearchForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // this.props.redditForumSel(this.state.redditForum);
+    // this.props.redditForum(this.state.redditForum);
+  }
+  redditForumSelect() {
+    // if (!this.state.redditLookup[subreddit]) {
+    //   this.setState({
+    //     redditSelected: null,
+    //     redditForumError: subreddit,
+    //   });
+    console.log(this);
+    return superagent.get(`${apiUrl}${'travel'}.json?limit=${'1'}`)
+      .then((response) => {
+        console.log(response.body);
+        this.setState({
+          redditSelected: response.body,
+          redditForumError: null,
+        });
+      })
+      .catch(console.error);
   }
   render() {
     return (
@@ -76,27 +72,9 @@ class RedditSearchForm extends React.Component {
         value={this.state.redditForumLimit}
         onChange={this.handleLimitChange}
       />
-      <button onClick= { this.handleForumChange }>Click here</button>
+      <button onClick= { this.redditForumSelect }>Click here</button>
     </form>
     );
-  }
-  redditSelect(name) {
-    if (!this.state.redditLookup[name]) {
-      this.setState({
-        redditSelected: null,
-        redditForumError: name,
-      });
-    } else {
-      return superagent.get(this.state.redditLookup[name])
-        .then((response) => {
-          this.setState({
-            redditSelected: response.body,
-            redditForumError: null,
-          });
-        })
-        .catch(console.error);
-    }
-    return undefined;
   }
 }
 
@@ -118,9 +96,24 @@ class RedditSearchForm extends React.Component {
 //   }
 // }
 
+// App Component
+// should contain all of the application state
+// should contain methods for modifying the application state
+// the state should have a topics array for holding the results of the search
 
-
-
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redditLookup: {},
+    };
+  }
+  render() {
+    return (
+      <RedditSearchForm/>
+    );
+  }
+}
 
 const container = document.createElement('div');
 document.body.appendChild(container);

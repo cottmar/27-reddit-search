@@ -22,7 +22,7 @@ class PokemonSearchForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    // this.props.pokemonSelect(this.state.pokeName);
+    this.props.pokemonSelect(this.state.pokeName); // eslint-disable-line
   }
 
   render() {
